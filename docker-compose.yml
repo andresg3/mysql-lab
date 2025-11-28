@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql80-lab
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: StrongRootPass123!
+      MYSQL_DATABASE: lab
+      MYSQL_USER: lab_user
+      MYSQL_PASSWORD: lab123!
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./conf.d:/etc/mysql/conf.d
+
+#   pmm-server:
+#     image: percona/pmm-server:3
+#     container_name: pmm-server
+#     restart: unless-stopped
+#     # PMM UI on https://localhost:8443
+#     ports:
+#       - "8443:8443"
+#     volumes:
+#       - pmm-data:/srv
+
+#   pmm-client:
+#     image: percona/pmm-client:3
+#     container_name: pmm-client
+#     restart: unless-stopped
+#     depends_on:
+#       - pmm-server
+#       - mysql
+#     environment:
+#       PMM_AGENT_SERVER_ADDRESS: pmm-server:8443
+#       PMM_AGENT_SERVER_USERNAME: admin
+#       PMM_AGENT_SERVER_PASSWORD: admin
+#       PMM_AGENT_SERVER_INSECURE_TLS: "1"
+#       PMM_AGENT_SETUP: "1"
+#       PMM_AGENT_CONFIG_FILE: config/pmm-agent.yaml
+#       PMM_AGENT_SETUP_FORCE: "1"
+#     volumes:
+#       - pmm-client-data:/usr/local/percona/pmm/tmp
+
+# volumes:
+#   pmm-data:
+#   pmm-client-data:
