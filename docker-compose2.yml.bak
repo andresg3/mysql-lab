@@ -28,34 +28,19 @@ services:
     container_name: pmm-client
     restart: unless-stopped
     depends_on:
-      pmm-server:
-        condition: service_healthy
-      mysql:
-        condition: service_started
-
+      - pmm-server
+      - mysql
     environment:
       PMM_AGENT_SERVER_ADDRESS: pmm-server:8443
       PMM_AGENT_SERVER_USERNAME: admin
       PMM_AGENT_SERVER_PASSWORD: admin
       PMM_AGENT_SERVER_INSECURE_TLS: "1"
-      PMM_AGENT_CONFIG_FILE: config/pmm-agent.yaml
       PMM_AGENT_SETUP: "1"
+      PMM_AGENT_CONFIG_FILE: config/pmm-agent.yaml
       PMM_AGENT_SETUP_FORCE: "1"
-
-      # Auto-register MySQL on container start
-      PMM_AGENT_PRERUN_SCRIPT: >
-        pmm-admin status --wait=30s &&
-        pmm-admin add mysql
-          --service-name=mysql80-lab
-          --username=root
-          --password=StrongRootPass123!
-          --host=mysql
-          --port=3306
-          --query-source=perfschema
-        || echo "mysql80-lab already registered or add failed"
-
     volumes:
       - pmm-client-data:/usr/local/percona/pmm/tmp
 
 volumes:
+  pmm-data:
   pmm-client-data:
